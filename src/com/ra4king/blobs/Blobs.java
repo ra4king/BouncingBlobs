@@ -41,7 +41,7 @@ public class Blobs extends GLProgram {
 	private Circle[] circles;
 	
 	public Blobs() {
-		super(false);//"Marching Squares", 800, 600, false);
+		super("Bouncing Blobs", 1280, 800, false);
 	}
 	
 	@Override
