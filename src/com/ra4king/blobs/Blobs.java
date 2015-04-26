@@ -33,6 +33,8 @@ public class Blobs extends GLProgram {
 	
 	private ShaderProgram blobsProgram;
 	private int showCirclesUniform;
+	private int colorSchemeUniform;
+	
 	private boolean showCircles = false;
 	
 	private int blobsVAO;
@@ -49,10 +51,11 @@ public class Blobs extends GLProgram {
 		setFPS(0);
 		setPrintDebug(true);
 		
-		final int MAX_CIRCLES = 100;
+		final int MAX_CIRCLES = 200;
 		
 		blobsProgram = new ShaderProgram(Utils.readFully(getClass().getResourceAsStream("blobs.vert")), Utils.readFully(getClass().getResourceAsStream("blobs.frag")));
 		showCirclesUniform = blobsProgram.getUniformLocation("showCircles");
+		colorSchemeUniform = blobsProgram.getUniformLocation("colorScheme");
 		
 		blobsBuffer = new BufferSubData(GL_UNIFORM_BUFFER, MAX_CIRCLES * Circle.SIZE + 4, true, false);
 		
@@ -87,15 +90,15 @@ public class Blobs extends GLProgram {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		
-		final float minSize = 0.01f;
-		final float maxSize = 0.05f;
-		final float maxSpeed = 0.2f;
+		final float minSize = 0.03f;
+		final float maxSize = 0.1f;
+		final float maxSpeed = 0.6f;
 		
 		circles = new Circle[MAX_CIRCLES];
 		for(int i = 0; i < MAX_CIRCLES; i++) {
-			circles[i] = new Circle(new Vector2((float)(Math.random() * 2f - 1f), (float)(Math.random() * 2f - 1f)), 
+			circles[i] = new Circle(new Vector2((float)(Math.random() * 2f - 1f), (float)(Math.random() * 2f - 1f)),
 			                         (float)Math.random() * maxSize + minSize,
-									 new Vector2((float)Math.random() * maxSpeed * 2f - maxSpeed, (float)Math.random() * maxSpeed * 2f - maxSpeed));
+			                         new Vector2((float)Math.random() * maxSpeed * 2f - maxSpeed, (float)Math.random() * maxSpeed * 2f - maxSpeed));
 		}
 	}
 	
@@ -104,8 +107,9 @@ public class Blobs extends GLProgram {
 		super.update(deltaTime);
 		
 		for(Circle c : circles) {
-			if(c != null)
+			if(c != null) {
 				c.update(deltaTime);
+			}
 		}
 	}
 	
@@ -116,6 +120,10 @@ public class Blobs extends GLProgram {
 			
 			blobsProgram.begin();
 			glUniform1i(showCirclesUniform, showCircles ? 1 : 0);
+			blobsProgram.end();
+		} else if(c >= '1' && c <= '9') {
+			blobsProgram.begin();
+			glUniform1i(colorSchemeUniform, c - '1');
 			blobsProgram.end();
 		}
 	}
@@ -128,8 +136,7 @@ public class Blobs extends GLProgram {
 			if(c != null) {
 				c.toBuffer(buffer);
 				circleCount++;
-			}
-			else {
+			} else {
 				for(int i = 0; i < Circle.SIZE; i++)
 					buffer.put((byte)0);
 			}
@@ -166,8 +173,7 @@ public class Blobs extends GLProgram {
 			if(center.x() + radius >= 1.0f) {
 				velocity.x(-velocity.x());
 				center.x(1.0f - radius);
-			}
-			else if(center.x() - radius <= -1.0f) {
+			} else if(center.x() - radius <= -1.0f) {
 				velocity.x(-velocity.x());
 				center.x(-1.0f + radius);
 			}
@@ -175,8 +181,7 @@ public class Blobs extends GLProgram {
 			if(center.y() + radius >= 1.0f) {
 				velocity.y(-velocity.y());
 				center.y(1.0f - radius);
-			}
-			else if(center.y() - radius <= -1.0f) {
+			} else if(center.y() - radius <= -1.0f) {
 				velocity.y(-velocity.y());
 				center.y(-1.0f + radius);
 			}
