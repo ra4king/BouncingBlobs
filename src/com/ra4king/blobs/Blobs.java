@@ -41,7 +41,7 @@ public class Blobs extends GLProgram {
 	private final int MAX_CIRCLES = 100;
 	
 	public Blobs() {
-		super("Marching Squares", 1280, 1024, false);
+		super("Marching Squares", 800, 600, false);
 	}
 	
 	@Override
