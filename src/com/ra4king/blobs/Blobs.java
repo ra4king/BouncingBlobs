@@ -1,4 +1,4 @@
-package com.ra4king.marchingsquares;
+package com.ra4king.blobs;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -11,6 +11,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 
 import com.ra4king.opengl.util.GLProgram;
 import com.ra4king.opengl.util.ShaderProgram;
@@ -24,27 +25,34 @@ import net.indiespot.struct.cp.Struct;
 /**
  * @author Roi Atalla
  */
-public class MarchingSquares extends GLProgram {
+public class Blobs extends GLProgram {
 	public static void main(String[] args) {
-		new MarchingSquares().run(true);
+		new Blobs().run(true);
 	}
 	
 	private ShaderProgram blobsProgram;
+	private int showCirclesUniform;
+	private boolean showCircles = false;
+	
 	private int blobsVAO;
 	private GLBuffer blobsBuffer;
 	
 	private Circle[] circles;
-	private final int MAX_CIRCLES = 20;
+	private final int MAX_CIRCLES = 100;
 	
-	public MarchingSquares() {
-		super("Marching Squares", 800, 600, false);
+	public Blobs() {
+		super("Marching Squares", 1280, 1024, false);
 	}
 	
 	@Override
 	public void init() {
+		setFPS(0);
+		setPrintDebug(true);
+		
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		blobsProgram = new ShaderProgram(Utils.readFully(getClass().getResourceAsStream("blobs.vert")), Utils.readFully(getClass().getResourceAsStream("blobs.frag")));
+		showCirclesUniform = blobsProgram.getUniformLocation("showCircles");
 		
 		blobsBuffer = new BufferSubData(GL_UNIFORM_BUFFER, MAX_CIRCLES * Circle.SIZE + 4, true, false);
 		
@@ -79,13 +87,14 @@ public class MarchingSquares extends GLProgram {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		
-		final float maxSize = 0.2f;
+		final float minSize = 0.01f;
+		final float maxSize = 0.05f;
 		final float maxSpeed = 0.2f;
 		
 		circles = new Circle[MAX_CIRCLES];
-		for(int i = 0; i < 15; i++) {
+		for(int i = 0; i < MAX_CIRCLES; i++) {
 			circles[i] = new Circle(new Vector2((float)(Math.random() * 2f - 1f), (float)(Math.random() * 2f - 1f)), 
-			                         (float)Math.random() * maxSize + 0.05f,
+			                         (float)Math.random() * maxSize + minSize,
 									 new Vector2((float)Math.random() * maxSpeed * 2f - maxSpeed, (float)Math.random() * maxSpeed * 2f - maxSpeed));
 		}
 	}
@@ -97,6 +106,17 @@ public class MarchingSquares extends GLProgram {
 		for(Circle c : circles) {
 			if(c != null)
 				c.update(deltaTime);
+		}
+	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		if(key == Keyboard.KEY_SPACE) {
+			showCircles = !showCircles;
+			
+			blobsProgram.begin();
+			glUniform1i(showCirclesUniform, showCircles ? 1 : 0);
+			blobsProgram.end();
 		}
 	}
 	
