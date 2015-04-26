@@ -49,8 +49,6 @@ public class Blobs extends GLProgram {
 		setFPS(0);
 		setPrintDebug(true);
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
 		blobsProgram = new ShaderProgram(Utils.readFully(getClass().getResourceAsStream("blobs.vert")), Utils.readFully(getClass().getResourceAsStream("blobs.frag")));
 		showCirclesUniform = blobsProgram.getUniformLocation("showCircles");
 		
@@ -122,8 +120,6 @@ public class Blobs extends GLProgram {
 	
 	@Override
 	public void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		
 		ByteBuffer buffer = blobsBuffer.bind(0, blobsBuffer.getSize());
 		int circleCount = 0;
 		for(Circle c : circles) {

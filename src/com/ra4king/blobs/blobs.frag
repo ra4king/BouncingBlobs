@@ -21,7 +21,7 @@ in vec2 coord;
 out vec4 fragColor;
 
 void main() {
-	fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+	fragColor = vec4(0.2f, 0.4f, 0.5f, 1.0);
 	
 	float sum = 0.0;
 	
