@@ -12,6 +12,7 @@ import java.nio.ShortBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.PixelFormat;
 
 import com.ra4king.opengl.util.GLProgram;
 import com.ra4king.opengl.util.ShaderProgram;
@@ -27,7 +28,7 @@ import net.indiespot.struct.cp.Struct;
  */
 public class Blobs extends GLProgram {
 	public static void main(String[] args) {
-		new Blobs().run(true);
+		new Blobs().run(true, new PixelFormat(24, 0, 0, 0, 16));
 	}
 	
 	private ShaderProgram blobsProgram;
@@ -38,16 +39,17 @@ public class Blobs extends GLProgram {
 	private GLBuffer blobsBuffer;
 	
 	private Circle[] circles;
-	private final int MAX_CIRCLES = 100;
 	
 	public Blobs() {
-		super("Marching Squares", 800, 600, false);
+		super(false);//"Marching Squares", 800, 600, false);
 	}
 	
 	@Override
 	public void init() {
 		setFPS(0);
 		setPrintDebug(true);
+		
+		final int MAX_CIRCLES = 100;
 		
 		blobsProgram = new ShaderProgram(Utils.readFully(getClass().getResourceAsStream("blobs.vert")), Utils.readFully(getClass().getResourceAsStream("blobs.frag")));
 		showCirclesUniform = blobsProgram.getUniformLocation("showCircles");

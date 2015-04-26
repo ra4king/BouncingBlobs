@@ -30,12 +30,15 @@ void main() {
 		vec2 dist = c.center - coord;
 		float r = c.radius * c.radius;
 		float d = dot(dist, dist);
-		float f = r / d; 
+		float f = r / d;
 		
 		float isC = (1.0 - step(float(num_circles), float(i)));
 		sum += isC * f;
-		fragColor.xyz += int(showCircles) * isC * vec3(1.0, 0.0, 0.0) * (1.0 - step(1.0 + thickness, f)) * step(1.0, f);
+		fragColor.xyz += int(showCircles) * isC * vec3(1.0, 1.0, 0.0) * (1.0 - step(1.0 + thickness, f)) * step(1.0, f);
 	}
 	
-	fragColor.xyz += vec3(0.0, 1.0, 0.0) * step(1.0, sum);
+	fragColor.xyz += ((1.2 - sum) / 0.2) * vec3(0.0, 1.0, 0.0) * (1.0 - step(1.2, sum)) * step(1.0, sum);
+	fragColor.xyz += ((1.6 - sum) / 0.4) * vec3(0.0, 0.0, 1.0) * (1.0 - step(1.6, sum)) * step(1.2, sum);
+	fragColor.xyz += ((2.5 - sum) / 0.9) * vec3(1.0, 0.0, 0.0) * (1.0 - step(2.5, sum)) * step(1.6, sum);
+	fragColor.xyz += vec3(0.5, 0.0, 0.5) * step(2.5, sum);
 }
