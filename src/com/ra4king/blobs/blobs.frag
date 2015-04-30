@@ -43,10 +43,10 @@ void main() {
 			fragColor += vec4(0.2f, 0.4f, 0.6f, 1.0);
 			
 			sum -= 5.0;
-			fragColor.xyz += ((1.2 - sum) / 0.2) * vec3(0.0, 1.0, 0.0) * (1.0 - step(1.2, sum)) * step(1.0, sum);
-			fragColor.xyz += ((1.6 - sum) / 0.4) * vec3(0.0, 0.0, 1.0) * (1.0 - step(1.6, sum)) * step(1.2, sum);
-			fragColor.xyz += ((2.5 - sum) / 0.9) * vec3(1.0, 0.0, 0.0) * (1.0 - step(2.5, sum)) * step(1.6, sum);
-			fragColor.xyz += vec3(0.5, 0.0, 0.5) * step(2.5, sum);
+			fragColor.xyz += ((1.3 - sum) / 0.3) * vec3(0.0, 1.0, 0.0) * (1.0 - step(1.3, sum)) * step(1.0, sum);
+			fragColor.xyz += ((1.9 - sum) / 0.6) * vec3(0.0, 0.0, 1.0) * (1.0 - step(1.9, sum)) * step(1.3, sum);
+			fragColor.xyz += ((3.0 - sum) / 1.1) * vec3(1.0, 0.0, 0.0) * (1.0 - step(3.0, sum)) * step(1.9, sum);
+			fragColor.xyz += vec3(0.5, 0.0, 0.5) * step(3.0, sum);
 			break;
 		case 1:
 			fragColor += vec4(0.0, 0.0, 0.0, 1.0);
@@ -55,5 +55,6 @@ void main() {
 		case 2:
 			fragColor += vec4(1.0, 0.1, 0.1, 1.0);
 			fragColor.xyz += step(10.0, sum) * (sum - 10.0) * vec3(0.5);
+			break;
 	}
 }

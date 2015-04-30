@@ -28,7 +28,7 @@ import net.indiespot.struct.cp.Struct;
  */
 public class Blobs extends GLProgram {
 	public static void main(String[] args) {
-		new Blobs().run(true, new PixelFormat(24, 0, 0, 0, 16));
+		new Blobs().run(true, new PixelFormat(24, 0, 0, 0, 4));
 	}
 	
 	private ShaderProgram blobsProgram;
@@ -36,6 +36,7 @@ public class Blobs extends GLProgram {
 	private int colorSchemeUniform;
 	
 	private boolean showCircles = false;
+	private boolean pauseCircles = false;
 	
 	private int blobsVAO;
 	private GLBuffer blobsBuffer;
@@ -104,11 +105,11 @@ public class Blobs extends GLProgram {
 	
 	@Override
 	public void update(long deltaTime) {
-		super.update(deltaTime);
-		
-		for(Circle c : circles) {
-			if(c != null) {
-				c.update(deltaTime);
+		if(!pauseCircles) {
+			for(Circle c : circles) {
+				if(c != null) {
+					c.update(deltaTime);
+				}
 			}
 		}
 	}
@@ -116,6 +117,8 @@ public class Blobs extends GLProgram {
 	@Override
 	public void keyPressed(int key, char c) {
 		if(key == Keyboard.KEY_SPACE) {
+			pauseCircles = !pauseCircles;
+		} else if(key == Keyboard.KEY_C) {
 			showCircles = !showCircles;
 			
 			blobsProgram.begin();
